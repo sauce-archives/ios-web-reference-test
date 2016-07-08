@@ -32,18 +32,26 @@ public class ReferenceIosWebTest {
 
 	@After
 	public void tearDown() {
+		System.out.println("Test took: " + (System.currentTimeMillis() - startTime));
 		if (driver != null) {
 			driver.quit();
 		}
 	}
 
 	@Test
-	public void openWebpageAndTakeScreenshot() {
+	public void openWebpageAndTakeScreenshotFirst() {
 		String url = "https://www.google.com";
 
 		driver.get(url);
 		takeScreenshot();
-		System.out.println("Test took: " + (System.currentTimeMillis() - startTime));
+	}
+
+	@Test
+	public void openWebpageAndTakeScreenshotSecond() {
+		String url = "https://www.google.com";
+
+		driver.get(url);
+		takeScreenshot();
 	}
 
 	private void takeScreenshot() {
