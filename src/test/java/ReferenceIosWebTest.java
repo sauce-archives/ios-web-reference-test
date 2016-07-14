@@ -26,16 +26,19 @@ public class ReferenceIosWebTest {
 		capabilities.setCapability("testobject_device", System.getenv("TESTOBJECT_DEVICE_ID")); // device id through env variable
 		capabilities.setCapability("testobject_appium_version", "1.5.2");
 
-		this.startTime = System.currentTimeMillis();
+		long allocationTime = startTime = System.currentTimeMillis();
 		driver = new IOSDriver(new URL("https://app.testobject.com:443/api/appium/wd/hub"), capabilities);
+		System.out.println("Device allocation took: " + (System.currentTimeMillis() - allocationTime));
 	}
 
 	@After
 	public void tearDown() {
-		System.out.println("Test took: " + (System.currentTimeMillis() - startTime));
+		long tearDown = System.currentTimeMillis();
 		if (driver != null) {
 			driver.quit();
 		}
+		System.out.println("Driver quit took: " + (System.currentTimeMillis() - tearDown));
+		System.out.println("The whole test took: " + (System.currentTimeMillis() - startTime));
 	}
 
 	@Test
