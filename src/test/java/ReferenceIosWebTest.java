@@ -25,6 +25,7 @@ public class ReferenceIosWebTest {
 		capabilities.setCapability("testobject_api_key", System.getenv("TESTOBJECT_API_KEY")); // API key through env variable
 		capabilities.setCapability("testobject_device", System.getenv("TESTOBJECT_DEVICE_ID")); // device id through env variable
 		capabilities.setCapability("testobject_appium_version", "1.5.2");
+		capabilities.setCapability("testobject_cache_device", System.getenv("TESTOBJECT_CACHE_DEVICE"));
 
 		long allocationTime = startTime = System.currentTimeMillis();
 		driver = new IOSDriver(new URL("https://app.testobject.com:443/api/appium/wd/hub"), capabilities);
