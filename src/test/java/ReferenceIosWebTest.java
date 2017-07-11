@@ -2,9 +2,11 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSDriver;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testobject.integrations.LogentriesResultReporter;
 
 import java.net.URL;
 
@@ -13,33 +15,37 @@ import java.net.URL;
  */
 public class ReferenceIosWebTest {
 
+	@ClassRule
+	public static LogentriesResultReporter logentriesResultReporter = new LogentriesResultReporter();
+
 	private AppiumDriver driver;
-	private long startTime;
 
 	/* This is the setup that will be run before the test. */
 	@Before
 	public void setUp() throws Exception {
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 
-		capabilities.setCapability("testobject_app_id", "1");
+		capabilities.setCapability("testobject_app_id", System.getenv("TESTOBJECT_APP_ID"));
 		capabilities.setCapability("testobject_api_key", System.getenv("TESTOBJECT_API_KEY")); // API key through env variable
 		capabilities.setCapability("testobject_device", System.getenv("TESTOBJECT_DEVICE_ID")); // device id through env variable
-		capabilities.setCapability("testobject_appium_version", "1.5.2");
+		capabilities.setCapability("testobject_appium_version", System.getenv( "TESTOBJECT_APPIUM_VERSION"));
 		capabilities.setCapability("testobject_cache_device", System.getenv("TESTOBJECT_CACHE_DEVICE"));
 
-		long allocationTime = startTime = System.currentTimeMillis();
-		driver = new IOSDriver(new URL("https://app.testobject.com:443/api/appium/wd/hub"), capabilities);
-		System.out.println("Device allocation took: " + (System.currentTimeMillis() - allocationTime));
+		String automationName = System.getenv("AUTOMATION_NAME");
+		if (automationName != null && automationName.length() != 0) {
+			capabilities.setCapability("automationName", automationName);
+		}
+
+		driver = new IOSDriver(new URL(System.getenv("APPIUM_SERVER")), capabilities);
+		System.out.println(driver.getCapabilities().getCapability("testobject_test_report_url"));
+		System.out.println(driver.getCapabilities().getCapability("testobject_test_live_view_url"));
 	}
 
 	@After
 	public void tearDown() {
-		long tearDown = System.currentTimeMillis();
 		if (driver != null) {
 			driver.quit();
 		}
-		System.out.println("Driver quit took: " + (System.currentTimeMillis() - tearDown));
-		System.out.println("The whole test took: " + (System.currentTimeMillis() - startTime));
 	}
 
 	@Test
